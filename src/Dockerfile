@@ -9,7 +9,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/XamantaSDK.csproj", "XamantaSDK/"]
 RUN dotnet restore "./XamantaSDK/XamantaSDK.csproj"
-COPY . .
+COPY src/ XamantaSDK/
 WORKDIR "/src/XamantaSDK"
 RUN dotnet build "./XamantaSDK.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
