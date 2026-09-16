@@ -1,0 +1,37 @@
+# Caddy: TLS termination with an internal CA + gRPC reverse proxy to the h2c backend.
+# The CA root is materialized at ./certs/root.crt (see docker-compose.yml).
+
+{
+	# IP-literal clients (a DPC reaching the server by IP) send no TLS SNI, so Caddy has no
+	# name to pick a certificate by and aborts the handshake. Serve the IP's cert by default
+	# when no SNI is presented; clients that do send SNI (a hostname) still match normally.
+	default_sni {$SERVER_IP:127.0.0.1}
+
+	# Serve HTTPS on an unprivileged port so Caddy can run as a non-root user without needing
+	# extra capabilities. disable_redirects stops Caddy from also opening the privileged :80
+	# redirect listener (which a non-root process could not bind, and which nothing here needs).
+	https_port 8443
+	auto_https disable_redirects
+
+	# Don't try to install the CA root into the container's trust store: it's pointless (the
+	# store is ephemeral) and the non-root, read-only-rootfs container can't write to it anyway.
+	skip_install_trust
+
+	# No public ACME: the internal CA manages everything. h1+h2 is enough for gRPC and
+	# avoids depending on a UDP port for HTTP/3, which is left disabled.
+	servers {
+		protocols h1 h2
+	}
+}
+
+# The DNS hostname and the IP share handlers and the internal CA. With `tls internal` each
+# address gets a certificate (DNS SAN for the name, IP SAN for the IP) signed by the local
+# root; an IP goes in SERVER_IP, never in SERVER_NAME.
+{$SERVER_NAME:localhost}, {$SERVER_IP:127.0.0.1} {
+	tls internal
+
+	# The backend speaks h2c only; the h2c:// scheme forces cleartext HTTP/2 to the upstream.
+	# Caddy detects gRPC (content-type application/grpc), flushes immediately without buffering,
+	# and re-resolves the `app` name itself (survives a redeploy that changes its IP).
+	reverse_proxy h2c://app:5000
+}

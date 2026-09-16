@@ -1,0 +1,13 @@
+# Auto-merged by `docker compose up` for LOCAL DEBUG.
+# For production, run the base file alone:  docker compose -f docker-compose.yml up -d
+services:
+  app:
+    environment:
+      # Enables gRPC server reflection and the OpenAPI document (grpcurl / spec tooling).
+      ASPNETCORE_ENVIRONMENT: Development
+      # Insecure default so `docker compose up` works with no app.env. NEVER in production.
+      OAuth__JwtSigningKey: "eEdftrhRLXXgTXvxPwmuvdkmxVhPJec22GJrMAnUv6YuZpuBsjv4bCT5TZAnrjsv"
+    # Reach the h2c backend directly, bypassing TLS, e.g. grpcurl -plaintext localhost:5000 ...
+    # Bound to loopback only: the plaintext port must never be reachable off the host.
+    ports:
+      - "127.0.0.1:5000:5000"

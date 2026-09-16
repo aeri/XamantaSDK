@@ -55,3 +55,9 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+*.db-wal
+*.db-shm
+*.db
+/src/spec
+src/appsettings.json
+/src/doc

@@ -1,0 +1,182 @@
+syntax = "proto3";
+
+package commands;
+
+option java_package = "cat.naval.xamanta.protos";
+option java_outer_classname = "CommandsProto";
+option java_multiple_files = true;
+option csharp_namespace = "XamantaSDK";
+
+enum CommandType {
+  COMMAND_TYPE_UNSPECIFIED = 0;
+  LOCK                     = 1;
+  RESET_PASSWORD           = 2;
+  REBOOT                   = 3;
+  WIPE                     = 4;
+  REQUEST_DEVICE_INFO      = 5;
+  CLEAR_APP_DATA           = 6;
+  REMARRY                  = 7;
+  DECOMMISSION             = 8;
+}
+
+message ResetPasswordParams {
+  string new_password = 1;
+}
+
+message WipeParams {
+  bool wipe_external_storage = 1;
+  bool preserve_reset_protection = 2;
+}
+
+message ClearAppDataParams {
+  string package_name = 1;
+}
+
+message RemarryParams {
+  string token_endpoint   = 1;
+  string host             = 2;
+  int32  port             = 3;
+  string enrollment_token = 4;
+  reserved 5;
+  reserved "use_tls";
+  string server_ca_cert   = 6;
+}
+
+message Command {
+  string id = 1;
+  CommandType type = 2;
+  string issued_at = 3;
+  int64 duration_seconds = 4;
+  oneof params {
+    ResetPasswordParams reset_password_params = 10;
+    WipeParams          wipe_params           = 11;
+    ClearAppDataParams  clear_app_data_params = 12;
+    RemarryParams       remarry_params        = 13;
+  }
+}
+
+enum CommandStatus {
+  COMMAND_STATUS_UNSPECIFIED = 0;
+  SUCCESS = 1;
+  FAILED  = 2;
+}
+
+enum CommandFailureReason {
+  COMMAND_FAILURE_REASON_UNSPECIFIED = 0;
+  NOT_DEVICE_OWNER  = 1;
+  INVALID_PARAMS    = 2;
+  COMMAND_API_LEVEL = 3;
+  PACKAGE_NOT_FOUND = 4;
+  UNKNOWN_COMMAND   = 5;
+  INTERNAL_ERROR    = 6;
+  EXPIRED           = 7;
+}
+
+message DeviceInfo {
+  string device_id       = 1;
+  string management_mode = 2;
+  string ownership       = 3;
+  int32  api_level       = 4;
+  SoftwareInfo   software_info   = 5;
+  HardwareInfo   hardware_info   = 6;
+  repeated Display displays      = 7;
+  repeated ApplicationReport application_reports = 8;
+  NetworkInfo    network_info    = 9;
+  MemoryInfo     memory_info     = 10;
+  DeviceSettings device_settings = 11;
+  map<string, string> system_properties = 12;
+}
+
+message SoftwareInfo {
+  string android_version        = 1;
+  string android_build_number   = 2;
+  string device_kernel_version  = 3;
+  string bootloader_version     = 4;
+  string android_build_time     = 5;
+  string security_patch_level   = 6;
+  string primary_language_code  = 7;
+  string device_build_signature = 8;
+  SystemUpdateInfo system_update_info = 9;
+}
+
+message SystemUpdateInfo {
+  string update_status = 1;
+}
+
+message HardwareInfo {
+  string brand                   = 1;
+  string hardware                = 2;
+  string device_baseband_version = 3;
+  string manufacturer            = 4;
+  string serial_number           = 5;
+  string model                   = 6;
+  repeated float battery_shutdown_temperatures   = 7;
+  repeated float battery_throttling_temperatures = 8;
+  repeated float cpu_shutdown_temperatures       = 9;
+  repeated float cpu_throttling_temperatures     = 10;
+  repeated float gpu_shutdown_temperatures       = 11;
+  repeated float gpu_throttling_temperatures     = 12;
+  repeated float skin_shutdown_temperatures      = 13;
+  repeated float skin_throttling_temperatures    = 14;
+}
+
+message Display {
+  string name         = 1;
+  int32  refresh_rate = 2;
+  string state        = 3;
+  int32  width        = 4;
+  int32  height       = 5;
+  int32  density      = 6;
+}
+
+message ApplicationReport {
+  string package_name                  = 1;
+  string version_name                  = 2;
+  int64  version_code                  = 3;
+  string display_name                  = 4;
+  repeated string signing_key_cert_fingerprints = 5;
+  string installer_package_name        = 6;
+  string application_source            = 7;
+  string state                         = 8;
+  string user_facing_type              = 9;
+}
+
+message NetworkInfo {
+  string imei                  = 1;
+  string network_operator_name = 2;
+  repeated TelephonyInfo telephony_infos = 3;
+}
+
+message TelephonyInfo {
+  string carrier_name = 1;
+  string icc_id       = 2;
+}
+
+message MemoryInfo {
+  int64 total_ram              = 1;
+  int64 total_internal_storage = 2;
+}
+
+message DeviceSettings {
+  bool   unknown_sources_enabled      = 1;
+  bool   development_settings_enabled = 2;
+  bool   adb_enabled                  = 3;
+  bool   is_encrypted                 = 4;
+  string encryption_status            = 5;
+  bool   verify_apps_enabled          = 6;
+}
+
+message CommandResult {
+  string id = 1;
+  CommandStatus status = 2;
+  CommandFailureReason failure_reason = 3;
+  string failure_message = 4;
+  string executed_at = 5;
+  oneof payload {
+    DeviceInfo device_info = 10;
+  }
+}
+
+service CommandService {
+  rpc CommandChannel(stream CommandResult) returns (stream Command);
+}

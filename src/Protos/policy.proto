@@ -1,0 +1,942 @@
+syntax = "proto3";
+
+package policy;
+
+option java_package = "cat.naval.xamanta.protos";
+option java_outer_classname = "PolicyProto";
+option java_multiple_files = true;
+option csharp_namespace = "XamantaSDK";
+
+message Policy {
+  reserved 1, 2;
+
+  string name = 3;
+  int32 version = 4;
+  string description = 5;
+  DevicePolicy device_policy = 6;
+  SelfUpdate self_update = 7;
+}
+
+message SelfUpdate {
+  int64  version_code = 1;
+  string download_url = 2;
+  string sha256_sum   = 3;
+}
+
+message DevicePolicy {
+  string id = 1;
+
+  reserved 2;
+
+  repeated ApplicationPolicy applications = 3;
+  bool add_user_disabled = 4;
+  bool adjust_volume_disabled = 5;
+  bool factory_reset_disabled = 6;
+  bool install_apps_disabled = 7;
+  bool mount_physical_media_disabled = 8;
+  bool modify_accounts_disabled = 9;
+  bool uninstall_apps_disabled = 11;
+  bool keyguard_disabled = 13;
+  bool bluetooth_config_disabled = 14;
+  bool cell_broadcasts_config_disabled = 15;
+  bool credentials_config_disabled = 16;
+  bool mobile_networks_config_disabled = 17;
+  bool vpn_config_disabled = 19;
+  bool create_windows_disabled = 21;
+  bool network_reset_disabled = 22;
+  bool outgoing_beam_disabled = 23;
+  bool outgoing_calls_disabled = 24;
+  bool remove_user_disabled = 25;
+  bool sms_disabled = 27;
+  bool fun_disabled = 32;
+  bool screen_capture_disabled = 34;
+
+  reserved 36;
+
+  reserved 43, 44, 45;
+
+  int64 maximum_time_to_lock_ms = 37;
+
+  int32 keyguard_disabled_features = 38;
+
+  PackageNameList permitted_input_methods = 39;
+
+  PackageNameList permitted_accessibility_services = 40;
+
+  SystemUpdate system_update = 41;
+
+  repeated BatteryPluggedMode stay_on_plugged_modes = 42;
+
+  FactoryResetProtection factory_reset_protection = 46;
+
+  PermissionPolicy default_permission_policy = 47;
+
+  KioskCustomization kiosk_customization = 48;
+
+  bool bluetooth_disabled = 50;
+  bool bluetooth_contact_sharing_disabled = 51;
+  bool data_roaming_disabled = 52;
+  bool set_user_icon_disabled = 53;
+  bool set_wallpaper_disabled = 54;
+  bool skip_first_use_hints_enabled = 55;
+
+  LocationMode location_mode = 56;
+  PrintingPolicy printing_policy = 57;
+  CameraAccess camera_access = 58;
+  MicrophoneAccess microphone_access = 59;
+  AutoDateAndTimeZone auto_date_and_time_zone = 60;
+  AssistContentPolicy assist_content_policy = 61;
+  EncryptionPolicy encryption_policy = 62;
+  MtePolicy mte_policy = 63;
+  CredentialProviderPolicyDefault credential_provider_policy_default = 64;
+
+  AdvancedSecurityOverrides advanced_security_overrides = 65;
+  DeviceRadioState device_radio_state = 66;
+  DeviceConnectivityManagement device_connectivity_management = 67;
+  DisplaySettings display_settings = 68;
+
+  AlwaysOnVpnPackage always_on_vpn_package = 69;
+  ProxyInfo recommended_global_proxy = 70;
+  repeated string account_types_with_management_disabled = 71;
+  repeated PersistentPreferredActivity persistent_preferred_activities = 72;
+  repeated PasswordRequirements password_policies = 73;
+
+  repeated DefaultApplicationSetting default_application_settings = 74;
+
+  AppFunctions app_functions = 75;
+
+  repeated WipeDataFlag wipe_data_flags = 76;
+
+  int32 minimum_api_level = 77;
+
+  StatusReportingSettings status_reporting_settings = 78;
+
+  repeated ChoosePrivateKeyRule choose_private_key_rules = 79;
+
+  OpenNetworkConfiguration open_network_configuration = 80;
+
+  PreferentialNetworkService preferential_network_service = 81;
+
+  UserFacingMessage device_owner_lock_screen_info = 82;
+
+  UserFacingMessage short_support_message = 83;
+  UserFacingMessage long_support_message = 84;
+}
+
+message UserFacingMessage {
+  string default_message = 1;
+  map<string, string> localized_messages = 2;
+}
+
+message KioskCustomization {
+  enum PowerButtonActions {
+    POWER_BUTTON_ACTIONS_UNSPECIFIED = 0;
+    POWER_BUTTON_AVAILABLE = 1;
+    POWER_BUTTON_BLOCKED = 2;
+  }
+  enum SystemErrorWarnings {
+    SYSTEM_ERROR_WARNINGS_UNSPECIFIED = 0;
+    ERROR_AND_WARNINGS_ENABLED = 1;
+    ERROR_AND_WARNINGS_MUTED = 2;
+  }
+  enum SystemNavigation {
+    SYSTEM_NAVIGATION_UNSPECIFIED = 0;
+    NAVIGATION_ENABLED = 1;
+    NAVIGATION_DISABLED = 2;
+    HOME_BUTTON_ONLY = 3;
+  }
+  enum StatusBar {
+    STATUS_BAR_UNSPECIFIED = 0;
+    NOTIFICATIONS_AND_SYSTEM_INFO_ENABLED = 1;
+    NOTIFICATIONS_AND_SYSTEM_INFO_DISABLED = 2;
+    SYSTEM_INFO_ONLY = 3;
+  }
+  enum DeviceSettings {
+    DEVICE_SETTINGS_UNSPECIFIED = 0;
+    SETTINGS_ACCESS_ALLOWED = 1;
+    SETTINGS_ACCESS_BLOCKED = 2;
+  }
+
+  PowerButtonActions power_button_actions = 1;
+  SystemErrorWarnings system_error_warnings = 2;
+  SystemNavigation system_navigation = 3;
+  StatusBar status_bar = 4;
+  DeviceSettings device_settings = 5;
+}
+
+message PackageNameList {
+  repeated string package_names = 1;
+}
+
+message SystemUpdate {
+  enum SystemUpdateType {
+    SYSTEM_UPDATE_TYPE_UNSPECIFIED = 0;
+    AUTOMATIC = 1;
+    WINDOWED  = 2;
+    POSTPONE  = 3;
+  }
+  SystemUpdateType type = 1;
+  int32 start_minutes = 2;
+  int32 end_minutes = 3;
+}
+
+enum BatteryPluggedMode {
+  BATTERY_PLUGGED_MODE_UNSPECIFIED = 0;
+  AC = 1;
+  USB = 2;
+  WIRELESS = 3;
+}
+
+message FactoryResetProtection {
+  repeated string account_ids = 1;
+  bool disabled = 2;
+}
+
+enum PermissionPolicy {
+  PERMISSION_POLICY_UNSPECIFIED = 0;
+  PROMPT = 1;
+  GRANT  = 2;
+  DENY   = 3;
+}
+
+message PermissionGrant {
+  string permission = 1;
+  PermissionPolicy policy = 2;
+}
+
+enum InstallType {
+  INSTALL_TYPE_UNSPECIFIED = 0;
+  INSTALLED        = 1;
+  FORCE_INSTALLED  = 2;
+  KIOSK            = 3;
+  BLOCKED          = 4;
+  AVAILABLE        = 5;
+}
+
+message ApplicationPolicy {
+  string package_name = 1;
+  string download_url = 2;
+  string sha256_sum   = 3;
+  InstallType install_type = 4;
+  repeated PermissionGrant permission_grants = 5;
+  int64 minimum_version_code = 6;
+
+  PermissionPolicy default_permission_policy = 7;
+
+  repeated ManagedProperty managed_configuration = 8;
+
+  repeated DelegatedScope delegated_scopes = 9;
+
+  AlwaysOnVpnLockdownExemption always_on_vpn_lockdown_exemption = 10;
+
+  CredentialProviderPolicy credential_provider_policy = 11;
+
+  UserControlSettings user_control_settings = 12;
+
+  PreferentialNetworkId preferential_network_id = 13;
+
+  repeated ApplicationSigningKeyCert signing_key_certs = 14;
+
+  enum DelegatedScope {
+    DELEGATED_SCOPE_UNSPECIFIED = 0;
+    CERT_INSTALL           = 1;
+    MANAGED_CONFIGURATIONS = 2;
+    BLOCK_UNINSTALL        = 3;
+    PERMISSION_GRANT       = 4;
+    PACKAGE_ACCESS         = 5;
+    ENABLE_SYSTEM_APP      = 6;
+    NETWORK_ACTIVITY_LOGS  = 7;
+    SECURITY_LOGS          = 8;
+    CERT_SELECTION         = 9;
+  }
+
+  enum AlwaysOnVpnLockdownExemption {
+    ALWAYS_ON_VPN_LOCKDOWN_EXEMPTION_UNSPECIFIED = 0;
+    VPN_LOCKDOWN_ENFORCED  = 1;
+    VPN_LOCKDOWN_EXEMPTION = 2;
+  }
+
+  enum CredentialProviderPolicy {
+    CREDENTIAL_PROVIDER_POLICY_UNSPECIFIED = 0;
+    CREDENTIAL_PROVIDER_ALLOWED = 1;
+  }
+
+  enum UserControlSettings {
+    USER_CONTROL_SETTINGS_UNSPECIFIED = 0;
+    USER_CONTROL_ALLOWED    = 1;
+    USER_CONTROL_DISALLOWED = 2;
+  }
+}
+
+message ApplicationSigningKeyCert {
+  bytes signing_key_cert_fingerprint_sha256 = 1;
+}
+
+message ManagedProperty {
+  string key = 1;
+  oneof value {
+    string string_value = 2;
+    bool   bool_value   = 3;
+    int32  int_value    = 4;
+    ManagedPropertyStringList  string_list_value  = 5;
+    ManagedPropertyBundle      bundle_value       = 6;
+    ManagedPropertyBundleArray bundle_array_value = 7;
+  }
+}
+
+message ManagedPropertyStringList { repeated string values = 1; }
+
+message ManagedPropertyBundle { repeated ManagedProperty properties = 1; }
+
+message ManagedPropertyBundleArray { repeated ManagedPropertyBundle bundles = 1; }
+
+enum LocationMode {
+  LOCATION_MODE_UNSPECIFIED = 0;
+  LOCATION_USER_CHOICE = 1;
+  LOCATION_ENFORCED = 2;
+  LOCATION_DISABLED = 3;
+}
+
+enum PrintingPolicy {
+  PRINTING_POLICY_UNSPECIFIED = 0;
+  PRINTING_DISALLOWED = 1;
+  PRINTING_ALLOWED = 2;
+}
+
+enum CameraAccess {
+  CAMERA_ACCESS_UNSPECIFIED = 0;
+  CAMERA_ACCESS_USER_CHOICE = 1;
+  CAMERA_ACCESS_DISABLED = 2;
+  CAMERA_ACCESS_ENFORCED = 3;
+}
+
+enum MicrophoneAccess {
+  MICROPHONE_ACCESS_UNSPECIFIED = 0;
+  MICROPHONE_ACCESS_USER_CHOICE = 1;
+  MICROPHONE_ACCESS_DISABLED = 2;
+  MICROPHONE_ACCESS_ENFORCED = 3;
+}
+
+enum AutoDateAndTimeZone {
+  AUTO_DATE_AND_TIME_ZONE_UNSPECIFIED = 0;
+  AUTO_DATE_AND_TIME_ZONE_USER_CHOICE = 1;
+  AUTO_DATE_AND_TIME_ZONE_ENFORCED = 2;
+}
+
+enum AssistContentPolicy {
+  ASSIST_CONTENT_POLICY_UNSPECIFIED = 0;
+  ASSIST_CONTENT_DISALLOWED = 1;
+  ASSIST_CONTENT_ALLOWED = 2;
+}
+
+enum EncryptionPolicy {
+  ENCRYPTION_POLICY_UNSPECIFIED = 0;
+  ENABLED_WITHOUT_PASSWORD = 1;
+  ENABLED_WITH_PASSWORD = 2;
+}
+
+enum MtePolicy {
+  MTE_POLICY_UNSPECIFIED = 0;
+  MTE_USER_CHOICE = 1;
+  MTE_ENABLED = 2;
+  MTE_DISABLED = 3;
+}
+
+enum CredentialProviderPolicyDefault {
+  CREDENTIAL_PROVIDER_POLICY_DEFAULT_UNSPECIFIED = 0;
+  CREDENTIAL_PROVIDER_DEFAULT_DISALLOWED = 1;
+  CREDENTIAL_PROVIDER_DEFAULT_DISALLOWED_EXCEPT_SYSTEM = 2;
+  CREDENTIAL_PROVIDER_DEFAULT_ALLOWED = 3;
+}
+
+message AdvancedSecurityOverrides {
+  enum UntrustedAppsPolicy {
+    UNTRUSTED_APPS_POLICY_UNSPECIFIED = 0;
+    DISALLOW_INSTALL = 1;
+    ALLOW_INSTALL_DEVICE_WIDE = 2;
+  }
+  enum GooglePlayProtectVerifyApps {
+    GOOGLE_PLAY_PROTECT_VERIFY_APPS_UNSPECIFIED = 0;
+    VERIFY_APPS_ENFORCED = 1;
+    VERIFY_APPS_USER_CHOICE = 2;
+  }
+  enum DeveloperSettings {
+    DEVELOPER_SETTINGS_UNSPECIFIED = 0;
+    DEVELOPER_SETTINGS_DISABLED = 1;
+    DEVELOPER_SETTINGS_ALLOWED = 2;
+  }
+  enum CommonCriteriaMode {
+    COMMON_CRITERIA_MODE_UNSPECIFIED = 0;
+    COMMON_CRITERIA_MODE_DISABLED = 1;
+    COMMON_CRITERIA_MODE_ENABLED = 2;
+  }
+
+  UntrustedAppsPolicy untrusted_apps_policy = 1;
+  GooglePlayProtectVerifyApps google_play_protect_verify_apps = 2;
+  DeveloperSettings developer_settings = 3;
+  CommonCriteriaMode common_criteria_mode = 4;
+}
+
+message DeviceRadioState {
+  enum WifiState {
+    WIFI_STATE_UNSPECIFIED = 0;
+    WIFI_STATE_USER_CHOICE = 1;
+    WIFI_ENABLED = 2;
+    WIFI_DISABLED = 3;
+  }
+  enum AirplaneModeState {
+    AIRPLANE_MODE_STATE_UNSPECIFIED = 0;
+    AIRPLANE_MODE_USER_CHOICE = 1;
+    AIRPLANE_MODE_DISABLED = 2;
+  }
+  enum UltraWidebandState {
+    ULTRA_WIDEBAND_STATE_UNSPECIFIED = 0;
+    ULTRA_WIDEBAND_USER_CHOICE = 1;
+    ULTRA_WIDEBAND_DISABLED = 2;
+  }
+  enum CellularTwoGState {
+    CELLULAR_TWO_G_STATE_UNSPECIFIED = 0;
+    CELLULAR_TWO_G_USER_CHOICE = 1;
+    CELLULAR_TWO_G_DISABLED = 2;
+  }
+  enum MinimumWifiSecurityLevel {
+    OPEN_NETWORK_SECURITY = 0;
+    PERSONAL_NETWORK_SECURITY = 1;
+    ENTERPRISE_NETWORK_SECURITY = 2;
+    ENTERPRISE_BIT192_NETWORK_SECURITY = 3;
+  }
+
+  WifiState wifi_state = 1;
+  AirplaneModeState airplane_mode_state = 2;
+  UltraWidebandState ultra_wideband_state = 3;
+  CellularTwoGState cellular_two_g_state = 4;
+  MinimumWifiSecurityLevel minimum_wifi_security_level = 5;
+}
+
+message WifiSsid {
+  string wifi_ssid = 1;
+}
+
+message WifiSsidPolicy {
+  enum WifiSsidPolicyType {
+    WIFI_SSID_POLICY_TYPE_UNSPECIFIED = 0;
+    WIFI_SSID_DENYLIST = 1;
+    WIFI_SSID_ALLOWLIST = 2;
+  }
+  WifiSsidPolicyType wifi_ssid_policy_type = 1;
+  repeated WifiSsid wifi_ssids = 2;
+}
+
+message DeviceConnectivityManagement {
+  enum UsbDataAccess {
+    USB_DATA_ACCESS_UNSPECIFIED = 0;
+    ALLOW_USB_DATA_TRANSFER = 1;
+    DISALLOW_USB_FILE_TRANSFER = 2;
+    DISALLOW_USB_DATA_TRANSFER = 3;
+  }
+  enum ConfigureWifi {
+    CONFIGURE_WIFI_UNSPECIFIED = 0;
+    ALLOW_CONFIGURING_WIFI = 1;
+    DISALLOW_ADD_WIFI_CONFIG = 2;
+    DISALLOW_CONFIGURING_WIFI = 3;
+  }
+  enum WifiDirectSettings {
+    WIFI_DIRECT_SETTINGS_UNSPECIFIED = 0;
+    ALLOW_WIFI_DIRECT = 1;
+    DISALLOW_WIFI_DIRECT = 2;
+  }
+  enum TetheringSettings {
+    TETHERING_SETTINGS_UNSPECIFIED = 0;
+    ALLOW_ALL_TETHERING = 1;
+    DISALLOW_WIFI_TETHERING = 2;
+    DISALLOW_ALL_TETHERING = 3;
+  }
+  enum BluetoothSharing {
+    BLUETOOTH_SHARING_UNSPECIFIED = 0;
+    BLUETOOTH_SHARING_ALLOWED = 1;
+    BLUETOOTH_SHARING_DISALLOWED = 2;
+  }
+
+  UsbDataAccess usb_data_access = 1;
+  ConfigureWifi configure_wifi = 2;
+  WifiDirectSettings wifi_direct_settings = 3;
+  TetheringSettings tethering_settings = 4;
+  WifiSsidPolicy wifi_ssid_policy = 5;
+  WifiRoamingPolicy wifi_roaming_policy = 6;
+  BluetoothSharing bluetooth_sharing = 7;
+  ApnPolicy apn_policy = 8;
+  PrivateDnsSettings private_dns_settings = 9;
+  PreferentialNetworkServiceSettings preferential_network_service_settings = 10;
+}
+
+message WifiRoamingPolicy {
+  repeated WifiRoamingSetting wifi_roaming_settings = 1;
+}
+
+message WifiRoamingSetting {
+  enum WifiRoamingMode {
+    WIFI_ROAMING_MODE_UNSPECIFIED = 0;
+    WIFI_ROAMING_DISABLED = 1;
+    WIFI_ROAMING_DEFAULT = 2;
+    WIFI_ROAMING_AGGRESSIVE = 3;
+  }
+  string wifi_ssid = 1;
+  WifiRoamingMode wifi_roaming_mode = 2;
+}
+
+message PrivateDnsSettings {
+  enum PrivateDnsMode {
+    PRIVATE_DNS_MODE_UNSPECIFIED = 0;
+    PRIVATE_DNS_USER_CHOICE = 1;
+    PRIVATE_DNS_AUTOMATIC = 2;
+    PRIVATE_DNS_SPECIFIED_HOST = 3;
+  }
+  PrivateDnsMode private_dns_mode = 1;
+  string private_dns_host = 2;
+}
+
+enum PreferentialNetworkService {
+  PREFERENTIAL_NETWORK_SERVICE_UNSPECIFIED = 0;
+  PREFERENTIAL_NETWORK_SERVICE_DISABLED = 1;
+  PREFERENTIAL_NETWORK_SERVICE_ENABLED = 2;
+}
+
+message PreferentialNetworkServiceSettings {
+  PreferentialNetworkId default_preferential_network_id = 1;
+  repeated PreferentialNetworkServiceConfig preferential_network_service_configs = 2;
+}
+
+message PreferentialNetworkServiceConfig {
+  enum NonMatchingNetworks {
+    NON_MATCHING_NETWORKS_UNSPECIFIED = 0;
+    NON_MATCHING_NETWORKS_ALLOWED = 1;
+    NON_MATCHING_NETWORKS_DISALLOWED = 2;
+  }
+  enum FallbackToDefaultConnection {
+    FALLBACK_TO_DEFAULT_CONNECTION_UNSPECIFIED = 0;
+    FALLBACK_TO_DEFAULT_CONNECTION_ALLOWED = 1;
+    FALLBACK_TO_DEFAULT_CONNECTION_DISALLOWED = 2;
+  }
+  PreferentialNetworkId preferential_network_id = 1;
+  NonMatchingNetworks non_matching_networks = 2;
+  FallbackToDefaultConnection fallback_to_default_connection = 3;
+}
+
+enum PreferentialNetworkId {
+  PREFERENTIAL_NETWORK_ID_UNSPECIFIED = 0;
+  NO_PREFERENTIAL_NETWORK = 1;
+  PREFERENTIAL_NETWORK_ID_ONE = 2;
+  PREFERENTIAL_NETWORK_ID_TWO = 3;
+  PREFERENTIAL_NETWORK_ID_THREE = 4;
+  PREFERENTIAL_NETWORK_ID_FOUR = 5;
+  PREFERENTIAL_NETWORK_ID_FIVE = 6;
+}
+
+message ApnPolicy {
+  enum OverrideApns {
+    OVERRIDE_APNS_UNSPECIFIED = 0;
+    OVERRIDE_APNS_DISABLED = 1;
+    OVERRIDE_APNS_ENABLED = 2;
+  }
+  OverrideApns override_apns = 1;
+  repeated ApnSetting apn_settings = 2;
+}
+
+message ApnSetting {
+  enum Protocol {
+    PROTOCOL_UNSPECIFIED = 0;
+    IP = 1;
+    IPV4V6 = 2;
+    IPV6 = 3;
+    NON_IP = 4;
+    PPP = 5;
+    UNSTRUCTURED = 6;
+  }
+  enum ApnType {
+    APN_TYPE_UNSPECIFIED = 0;
+    ENTERPRISE = 1;
+    BIP = 2;
+    CBS = 3;
+    DEFAULT = 4;
+    DUN = 5;
+    EMERGENCY = 6;
+    FOTA = 7;
+    HIPRI = 8;
+    IA = 9;
+    IMS = 10;
+    MCX = 11;
+    MMS = 12;
+    RCS = 13;
+    SUPL = 14;
+    VSIM = 15;
+    XCAP = 16;
+  }
+  enum AuthType {
+    AUTH_TYPE_UNSPECIFIED = 0;
+    NONE = 1;
+    PAP = 2;
+    CHAP = 3;
+    PAP_OR_CHAP = 4;
+  }
+  enum MvnoType {
+    MVNO_TYPE_UNSPECIFIED = 0;
+    GID = 1;
+    ICCID = 2;
+    IMSI = 3;
+    SPN = 4;
+  }
+  enum NetworkType {
+    NETWORK_TYPE_UNSPECIFIED = 0;
+    EDGE = 1;
+    GPRS = 2;
+    GSM = 3;
+    HSDPA = 4;
+    HSPA = 5;
+    HSPAP = 6;
+    HSUPA = 7;
+    IWLAN = 8;
+    LTE = 9;
+    NR = 10;
+    TD_SCDMA = 11;
+    UMTS = 12;
+  }
+  enum AlwaysOnSetting {
+    ALWAYS_ON_SETTING_UNSPECIFIED = 0;
+    NOT_ALWAYS_ON = 1;
+    ALWAYS_ON = 2;
+  }
+
+  string apn = 1;
+  string display_name = 2;
+  repeated ApnType apn_types = 3;
+  Protocol protocol = 4;
+  Protocol roaming_protocol = 5;
+  AuthType auth_type = 6;
+  string username = 7;
+  string password = 8;
+  string mmsc = 9;
+  string mms_proxy_address = 10;
+  int32 mms_proxy_port = 11;
+  string proxy_address = 12;
+  int32 proxy_port = 13;
+  MvnoType mvno_type = 14;
+  string numeric_operator_id = 15;
+  int32 carrier_id = 16;
+  repeated NetworkType network_types = 17;
+  int32 mtu_v4 = 18;
+  int32 mtu_v6 = 19;
+  AlwaysOnSetting always_on_setting = 20;
+}
+
+message DisplaySettings {
+  message ScreenBrightnessSettings {
+    enum ScreenBrightnessMode {
+      SCREEN_BRIGHTNESS_MODE_UNSPECIFIED = 0;
+      BRIGHTNESS_USER_CHOICE = 1;
+      BRIGHTNESS_AUTOMATIC = 2;
+      BRIGHTNESS_FIXED = 3;
+    }
+    ScreenBrightnessMode screen_brightness_mode = 1;
+    int32 screen_brightness = 2;
+  }
+  message ScreenTimeoutSettings {
+    enum ScreenTimeoutMode {
+      SCREEN_TIMEOUT_MODE_UNSPECIFIED = 0;
+      SCREEN_TIMEOUT_USER_CHOICE = 1;
+      SCREEN_TIMEOUT_ENFORCED = 2;
+    }
+    ScreenTimeoutMode screen_timeout_mode = 1;
+    int64 screen_timeout_ms = 2;
+  }
+
+  ScreenBrightnessSettings screen_brightness_settings = 1;
+  ScreenTimeoutSettings screen_timeout_settings = 2;
+}
+
+message AlwaysOnVpnPackage {
+  string package_name = 1;
+  bool lockdown_enabled = 2;
+}
+
+message ProxyInfo {
+  string host = 1;
+  int32 port = 2;
+  repeated string excluded_hosts = 3;
+  string pac_uri = 4;
+}
+
+message PersistentPreferredActivity {
+  string receiver_activity = 1;
+  repeated string actions = 2;
+  repeated string categories = 3;
+}
+
+enum PasswordQuality {
+  PASSWORD_QUALITY_UNSPECIFIED = 0;
+  SOMETHING = 1;
+  NUMERIC = 2;
+  NUMERIC_COMPLEX = 3;
+  ALPHABETIC = 4;
+  ALPHANUMERIC = 5;
+  COMPLEX = 6;
+  COMPLEXITY_LOW = 7;
+  COMPLEXITY_MEDIUM = 8;
+  COMPLEXITY_HIGH = 9;
+}
+
+enum PasswordScope {
+  SCOPE_UNSPECIFIED = 0;
+  SCOPE_DEVICE = 1;
+  SCOPE_PROFILE = 2;
+}
+
+enum RequirePasswordUnlock {
+  REQUIRE_PASSWORD_UNLOCK_UNSPECIFIED = 0;
+  USE_DEFAULT_DEVICE_TIMEOUT = 1;
+  REQUIRE_EVERY_DAY = 2;
+}
+
+message PasswordRequirements {
+  PasswordQuality password_quality = 1;
+  int32 password_minimum_length = 2;
+  int32 password_minimum_letters = 3;
+  int32 password_minimum_lower_case = 4;
+  int32 password_minimum_upper_case = 5;
+  int32 password_minimum_non_letter = 6;
+  int32 password_minimum_numeric = 7;
+  int32 password_minimum_symbols = 8;
+  int32 password_history_length = 9;
+  int32 maximum_failed_passwords_for_wipe = 10;
+  int64 password_expiration_timeout_ms = 11;
+  RequirePasswordUnlock require_password_unlock = 12;
+  PasswordScope password_scope = 13;
+}
+
+message DefaultApplicationSetting {
+  repeated DefaultApplication default_applications = 1;
+}
+
+message DefaultApplication {
+  enum DefaultApplicationType {
+    DEFAULT_APPLICATION_TYPE_UNSPECIFIED = 0;
+    DEFAULT_ASSISTANT = 1;
+    DEFAULT_BROWSER = 2;
+    DEFAULT_CALL_REDIRECTION = 3;
+    DEFAULT_CALL_SCREENING = 4;
+    DEFAULT_DIALER = 5;
+    DEFAULT_HOME = 6;
+    DEFAULT_SMS = 7;
+    DEFAULT_WALLET = 8;
+  }
+  enum DefaultApplicationScope {
+    DEFAULT_APPLICATION_SCOPE_UNSPECIFIED = 0;
+    SCOPE_FULLY_MANAGED = 1;
+    SCOPE_WORK_PROFILE = 2;
+    SCOPE_PERSONAL_PROFILE = 3;
+  }
+  string package_name = 1;
+  DefaultApplicationType default_application_type = 2;
+  repeated DefaultApplicationScope default_application_scopes = 3;
+}
+
+enum AppFunctions {
+  APP_FUNCTIONS_UNSPECIFIED = 0;
+  APP_FUNCTIONS_DISALLOWED = 1;
+  APP_FUNCTIONS_ALLOWED = 2;
+}
+
+enum WipeDataFlag {
+  WIPE_DATA_FLAG_UNSPECIFIED = 0;
+  WIPE_ESIMS = 1;
+}
+
+message StatusReportingSettings {
+  bool application_reports_enabled = 1;
+  bool device_settings_enabled = 2;
+  bool software_info_enabled = 3;
+  bool memory_info_enabled = 4;
+  bool network_info_enabled = 5;
+  bool display_info_enabled = 6;
+  bool power_management_events_enabled = 7;
+  bool hardware_status_enabled = 8;
+  bool system_properties_enabled = 9;
+  bool common_criteria_mode_enabled = 10;
+  bool default_application_info_reporting_enabled = 11;
+  ApplicationReportingSettings application_reporting_settings = 12;
+}
+
+message ApplicationReportingSettings {
+  bool include_removed_apps = 1;
+}
+
+message ChoosePrivateKeyRule {
+  string url_pattern = 1;
+  string private_key_alias = 2;
+  repeated string package_names = 3;
+}
+
+message OpenNetworkConfiguration {
+  repeated NetworkConfiguration network_configurations = 1;
+  repeated OncCertificate certificates = 2;
+}
+
+message NetworkConfiguration {
+  string guid = 1;
+  string name = 2;
+  WifiSettings wifi = 3;
+  ProxyInfo proxy_settings = 4;
+}
+
+message WifiSettings {
+  enum Security {
+    SECURITY_UNSPECIFIED = 0;
+    NONE = 1;
+    WEP_PSK = 2;
+    WPA_PSK = 3;
+    WPA_EAP = 4;
+    WEP_8021X = 5;
+    WPA3_ENTERPRISE_192 = 6;
+  }
+  enum MacAddressRandomizationMode {
+    MAC_ADDRESS_RANDOMIZATION_MODE_UNSPECIFIED = 0;
+    HARDWARE = 1;
+    AUTOMATIC = 2;
+  }
+  string ssid = 1;
+  string hex_ssid = 2;
+  bool hidden_ssid = 3;
+  Security security = 4;
+  bool auto_connect = 5;
+  string passphrase = 6;
+  EapSettings eap = 7;
+  MacAddressRandomizationMode mac_address_randomization_mode = 8;
+}
+
+message EapSettings {
+  enum Outer {
+    OUTER_UNSPECIFIED = 0;
+    EAP_AKA = 1;
+    EAP_TLS = 2;
+    EAP_TTLS = 3;
+    EAP_SIM = 4;
+    EAP_PWD = 5;
+    PEAP = 6;
+  }
+  enum Inner {
+    INNER_UNSPECIFIED = 0;
+    MSCHAPV2 = 1;
+    PAP = 2;
+  }
+  enum ClientCertType {
+    CLIENT_CERT_TYPE_UNSPECIFIED = 0;
+    REF = 1;
+    KEY_PAIR_ALIAS = 2;
+  }
+  Outer outer = 1;
+  Inner inner = 2;
+  string identity = 3;
+  repeated string domain_suffix_match = 4;
+  repeated string server_ca_refs = 5;
+  ClientCertType client_cert_type = 6;
+  string client_cert_ref = 7;
+  string client_cert_key_pair_alias = 8;
+  string password = 9;
+  string anonymous_identity = 10;
+}
+
+message OncCertificate {
+  enum Type {
+    TYPE_UNSPECIFIED = 0;
+    SERVER = 1;
+    CLIENT = 2;
+  }
+  string guid = 1;
+  Type type = 2;
+  string x509 = 3;
+  string pkcs12 = 4;
+  string pkcs12_password = 5;
+}
+
+message SyncRequest {
+  string device_id        = 1;
+  string package_name     = 2;
+  string signing_sha256   = 3;
+  int64  version_code     = 4;
+  string version_name     = 5;
+  int32  api_level        = 6;
+  string android_version  = 7;
+  string security_patch   = 8;
+  string model            = 9;
+  string manufacturer     = 10;
+  string brand            = 11;
+}
+
+message ApplyPolicyRequest {
+  Policy policy = 1;
+  bool force = 2;
+  string requested_by = 3;
+}
+
+enum Compliance {
+  IN_FORCE           = 0;
+  DEFIANCE           = 1;
+  UNASSIGNED         = 2;
+  PENDING_COMPLIANCE = 3;
+  PENDING_SYNC       = 4;
+  DECOMMISSION       = 5;
+}
+
+enum NonComplianceReason {
+  NON_COMPLIANCE_REASON_UNSPECIFIED = 0;
+  API_LEVEL         = 1;
+  MANAGEMENT_MODE   = 2;
+  USER_ACTION       = 3;
+  INVALID_VALUE     = 4;
+  APP_NOT_INSTALLED = 5;
+  UNSUPPORTED       = 6;
+  APP_INSTALLED     = 7;
+  PENDING           = 8;
+  APP_INCOMPATIBLE  = 9;
+  APP_NOT_UPDATED   = 10;
+}
+
+enum InstallationFailureReason {
+  INSTALLATION_FAILURE_REASON_UNSPECIFIED = 0;
+  INSTALLATION_FAILURE_REASON_UNKNOWN     = 1;
+  IN_PROGRESS                             = 2;
+  NOT_FOUND                               = 3;
+  NOT_COMPATIBLE_WITH_DEVICE              = 4;
+  NOT_APPROVED                            = 5;
+  PERMISSIONS_NOT_ACCEPTED                = 6;
+  NOT_AVAILABLE_IN_COUNTRY                = 7;
+  NO_LICENSES_REMAINING                   = 8;
+  NOT_ENROLLED                            = 9;
+  USER_INVALID                            = 10;
+  NETWORK_ERROR_UNRELIABLE_CONNECTION     = 11;
+  INSUFFICIENT_STORAGE                    = 12;
+}
+
+message NonComplianceDetail {
+  string setting_name                                = 1;
+  NonComplianceReason non_compliance_reason          = 2;
+  string package_name                                = 3;
+  string field_path                                  = 4;
+  string current_value                               = 5;
+  InstallationFailureReason installation_failure_reason = 6;
+}
+
+message ApplyPolicyResponse {
+  Compliance compliance               = 1;
+  repeated NonComplianceDetail details = 2;
+  string execution_id                 = 3;
+  string applied_at                   = 4;
+}
+
+message ComplianceAck {
+  bool received = 1;
+}
+
+service PolicySyncService {
+  rpc SyncPolicy(SyncRequest) returns (stream ApplyPolicyRequest);
+  rpc ReportCompliance(ApplyPolicyResponse) returns (ComplianceAck);
+}
